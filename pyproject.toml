@@ -1,0 +1,32 @@
+[project]
+name = "cer-autoencodeurs"
+version = "0.1.0"
+description = "Supports pédagogiques sur les auto-encodeurs et les courbes de charge CER Irlande"
+requires-python = ">=3.11"
+dependencies = [
+  "duckdb>=1.4", "jupyter>=1.0", "matplotlib>=3.8", "nbclient>=0.10",
+  "nbformat>=5.10", "numpy>=2.0", "pandas>=2.2", "pyarrow>=18",
+  "pyyaml>=6", "scikit-learn>=1.5", "seaborn>=0.13", "torch==2.4.1"
+]
+
+[[tool.uv.index]]
+name = "pytorch-gpu"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-gpu" }
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["setuptools>=70"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

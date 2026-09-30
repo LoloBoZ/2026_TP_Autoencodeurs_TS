@@ -1,0 +1,68 @@
+paths:
+  half_hourly: data/df_join.parquet
+  daily: data/df_jour.parquet
+  metadata: data/df_meta_gradient.parquet
+  processed: data/processed
+  outputs: outputs
+columns:
+  client: ID
+  pdl: id_pdl
+  timestamp: time
+  value: puissance
+  temperature: temp
+  daily_date: jour
+  daily_value: puissance_moy
+  daily_temperature: temp_moy
+semantics:
+  value_quantity: "puissance (confirmé par l'utilisateur)"
+  value_unit: "unité de puissance non précisée"
+  temperature_unit: "°C (fortement suggéré par les valeurs, à confirmer)"
+  timezone: "UTC (confirmé par l'utilisateur)"
+  dst_convention: "jours et semaines définis en UTC; aucune transition DST dans cette grille"
+imputation:
+  enabled: false
+  reason: "aucune valeur manquante observée dans la source fournie"
+selection:
+  start: "2009-07-20"
+  end: "2009-09-14"
+  max_imputed_fraction: 0.05
+  allow_single_donor: true
+normalization:
+  near_zero_epsilon: 1.0e-6
+model:
+  latent_dims: [2, 4, 8, 16]
+  batch_size: 256
+  patience: 6
+  learning_rate: 0.001
+seed: 42
+modes:
+  smoke:
+    n_clients: 48
+    experiment_start: "2009-07-20"
+    experiment_end: "2009-09-14"
+    latent_dims: [2, 4]
+    epochs: 2
+    cluster_counts: [3, 4]
+    sampling_strategy: "stratified_heating"
+    run_anomalies: false
+    batch_size: 256
+    kmeans_n_init: 10
+    silhouette_sample_size: 5000
+  full:
+    # Sous-ensemble substantiel mais compatible avec une station de travail.
+    # Augmenter progressivement après le diagnostic mémoire.
+    n_clients: 500
+    experiment_start: "2009-07-20"
+    experiment_end: "2010-12-27"
+    latent_dims: [2, 4, 8, 16]
+    epochs: 60
+    cluster_counts: [3, 4, 5, 6]
+    sampling_strategy: "gradient_plus_random"
+    gradient_ranking: "absolute"
+    n_gradient_clients: 300
+    n_random_clients: 200
+    run_anomalies: false
+    batch_size: 2048
+    kmeans_n_init: 3
+    silhouette_sample_size: 5000
+    reuse_processed: true

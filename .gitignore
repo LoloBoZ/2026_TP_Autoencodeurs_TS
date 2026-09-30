@@ -1,0 +1,31 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.ipynb_checkpoints/
+*.py[cod]
+*.egg-info/
+
+# Données sources, données transformées et résultats calculés
+/data/
+/outputs/
+*.parquet
+*.arrow
+*.feather
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.h5
+*.hdf5
+*.npz
+*.npy
+*.pt
+*.pth
+*.ckpt
+*.joblib
+*.pkl
+
+# Secrets locaux
+.env
+.env.*
+!.env.example
